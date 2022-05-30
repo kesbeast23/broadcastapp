@@ -1,8 +1,8 @@
 import { createContext,useEffect, useState,useContext } from "react";
-import { auth} from './firebase';
 import Loading from "./components/Loading";
 import nookies from "nookies";
 import { Router, useRouter } from "next/router";
+import { auth } from "./firebase";
 const AuthContext = createContext({});
 
  export const AuthProvider = ({children}) => {
@@ -10,7 +10,7 @@ const AuthContext = createContext({});
 	 const [loading, setLoading] = useState(true);
 	 const router = useRouter();
 	 useEffect(() => {
-		
+	
 		 return auth.onIdTokenChanged(async (user) => {
 			 if (!user) {
 				console.log('no user'); 

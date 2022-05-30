@@ -1,5 +1,4 @@
-import { Button, Grid,TextField,InputAdornment, IconButton , Alert, Typography, Avatar, Link }  from '@mui/material';
-import GoogleIcon from '@mui/icons-material/Google';
+import { Button, Grid,TextField,InputAdornment, IconButton , Alert, Typography, Avatar, Link, Snackbar }  from '@mui/material';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../firebase';
 import { useRouter } from 'next/router';
@@ -8,11 +7,13 @@ import { LockOutlined,Visibility,VisibilityOff } from '@mui/icons-material';
 import Head from "next/head";
 import Image from "next/image";
 import Header from '../components/Header2';
+import Header2 from '../components/Header2';
+
 
 
 
 export default function Login({ todosProps }) {
-  const [email, setEmail] = useState("");
+	const [email, setEmail] = useState("");
 	const [passwordOne, setPasswordOne] = useState("");
 	const [open,setOpen]=useState(false);
 	const [alertType,setAlertType]=useState("success");
@@ -44,7 +45,7 @@ export default function Login({ todosProps }) {
 		.then(authUser => {
 		console.log(authUser);
 		  console.log("Success. The user is created in firebase")
-		  router.push("/loggedin");
+		router.push("/loggedin");
             showAlert("success","Successfully logged in");
 		})
 		.catch(error => {
@@ -54,16 +55,18 @@ export default function Login({ todosProps }) {
 		});
 		event.preventDefault();
 	
+	
 	}
-	    
+	     
 
   return (
+
 	<section className="relative">
 	<Head>
-	  <title>Log in | Disney+</title>
+	  <title>Log in | FunOlympics</title>
 	  <link rel="icon" href="/favicon.ico" />
 	</Head>
-	    <Header />
+	    <Header2/>
 	<div className="relative min-h-[calc(100vh-72px)]">
 	  <Image
 	    src="/images/hero-background.jpg"
@@ -73,8 +76,7 @@ export default function Login({ todosProps }) {
 	</div>
 	<div className="flex justify-center items-center">
 	  <div className="absolute flex flex-col space-y-3 top-1/4 w-full justify-center items-center max-w-screen-sm mx-auto p-8 -mt-16">
-	
-	   <form  onSubmit={onSubmit}>
+	  <form  onSubmit={onSubmit}>
 	<Grid 
 	container
 	spacing={0}
@@ -85,7 +87,7 @@ export default function Login({ todosProps }) {
 		  <Avatar >
           <LockOutlined />
         </Avatar>
-        <Typography component="h1" variant="h5" >
+        <Typography component="h1" variant="h5">
           Sign in
         </Typography>
 		  <div >
@@ -124,10 +126,18 @@ export default function Login({ todosProps }) {
     </div>
    
 	</Grid>
+	<Snackbar 
+      anchorOrigin={{vertical:'bottom',horizontal:'center'}}
+      open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={alertType} sx={{width:'100%'}}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
 	</form>
 	  </div>
 	</div>
       </section>
+
     );
 	
 }

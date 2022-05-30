@@ -7,6 +7,9 @@ import { useState } from 'react'
 import { LockOutlined,Visibility,VisibilityOff } from '@mui/icons-material';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import ReCAPTCHA from 'react-google-recaptcha'
+import Head from "next/head";
+import Image from "next/image";
+import Header from '../components/Header2';
 
 const SITE_KEY="6LcRIu4fAAAAAOP3LNy-S5QpnaA9scxTAaraJLIa";
 
@@ -161,7 +164,23 @@ const Register = ({type,color}) => {
 	    
 
   return (
-	<form  onSubmit={onSubmit}>
+    <section className="relative">
+	<Head>
+	  <title>Log in | FunOlympics</title>
+	  <link rel="icon" href="/favicon.ico" />
+	</Head>
+	    <Header />
+	<div className="relative min-h-[calc(100vh-72px)]">
+	  <Image
+	    src="/images/hero-background.jpg"
+	    layout="fill"
+	    objectFit="cover"
+	  />
+	</div>
+	<div className="flex justify-center items-center">
+	  <div className="absolute flex flex-col space-y-3 top-1/4 w-full justify-center items-center max-w-screen-sm mx-auto p-8 -mt-16">
+	
+    <form  onSubmit={onSubmit}>
 	<Grid 
 	container
 	spacing={0}
@@ -242,6 +261,11 @@ const Register = ({type,color}) => {
         </Alert>
       </Snackbar>
 	</form>
+	  </div>
+	</div>
+      </section>
+
+
   )
 }
 

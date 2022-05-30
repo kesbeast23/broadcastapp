@@ -7,6 +7,8 @@ import {
 } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
 import { useAuth } from "../Auth";
+import { db,auth } from '../firebase';
+import { Avatar, Box, IconButton, Typography } from "@mui/material";
 
 function Header2() {
   const {currentUser,loading} = useAuth();
@@ -40,24 +42,23 @@ function Header2() {
             <StarIcon className="h-4" />
             <span className="span">Originals</span>
           </a>
-          <a className="header-link group">
-            <img src="/images/movie-icon.svg" alt="" className="h-5" />
-            <span className="span">Movies</span>
-          </a>
-          <a className="header-link group">
-            <img src="/images/series-icon.svg" alt="" className="h-5" />
-            <span className="span">Series</span>
-          </a>
+        
         </div>
       )}
       {!currentUser ? (
-         <span className="span"></span> 
+        <button
+          className="ml-auto uppercase border px-4 py-1.5 rounded font-medium tracking-wide hover:bg-blue hover:text-black transition duration-200"
+        
+        >
+          Login
+        </button>
       ) : (
-        <img
-          src={session.user.image}
-          className="ml-auto h-12 w-12 rounded-full object-cover cursor-pointer"
-          onClick={signOut}
-        />
+        <Box sx={{display:'flex',justifyContent:'space-between'}} mt={3}>
+        <IconButton onClick={()=>auth.signOut()}>
+        <Avatar src={currentUser && currentUser.photoURL}/>
+        </IconButton>
+        <Typography variant="h5">{currentUser && currentUser.email}</Typography>
+      </Box>
       )}
     </header>
   );

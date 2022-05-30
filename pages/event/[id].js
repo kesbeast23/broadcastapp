@@ -1,4 +1,3 @@
-import { getSession, useSession } from "next-auth/client";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -7,22 +6,23 @@ import Header from "../../components/Header";
 import Hero from "../../components/Hero";
 import { PlusIcon, XIcon } from "@heroicons/react/solid";
 import ReactPlayer from "react-player/lazy";
+import { useAuth } from "../../Auth";
 
 function Movie({ result }) {
-  const [session] = useSession();
+  const {currentUser,loading} = useAuth();
   const BASE_URL = "https://image.tmdb.org/t/p/original/";
   const router = useRouter();
   const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
-    if (!session) {
+    if (!currentUser) {
       router.push("/");
     }
   }, []);
 
-  const index = result.videos.results.findIndex(
-    (element) => element.type === "Trailer"
-  );
+  // const index = result.videos.results.findIndex(
+  //   (element) => element.type === "Trailer"
+  // );
 
   return (
     <div className="relative">
@@ -31,15 +31,15 @@ function Movie({ result }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      {!session ? (
+      {!currentUser ? (
         <Hero />
       ) : (
         <section className="relative z-50">
           <div className="relative min-h-[calc(100vh-72px)]">
             <Image
               src={
-                `${BASE_URL}${result.backdrop_path || result.poster_path}` ||
-                `${BASE_URL}${result.poster_path}`
+                `${result.backdrop_path || result.poster_path}` ||
+                `${result.poster_path}`
               }
               layout="fill"
               objectFit="cover"
@@ -113,7 +113,7 @@ function Movie({ result }) {
             </div>
             <div className="relative pt-[56.25%]">
               <ReactPlayer
-                url={`https://www.youtube.com/watch?v=${result.videos?.results[index]?.key}`}
+                url={`https://firebasestorage.googleapis.com/v0/b/broadcastapp-15206.appspot.com/o/file_example_MP4_480_1_5MG.mp4?alt=media&token=7f4a1e74-e1fb-42b7-8913-9a3c495b2d4d`}
                 width="100%"
                 height="100%"
                 style={{ position: "absolute", top: "0", left: "0" }}
@@ -131,16 +131,40 @@ function Movie({ result }) {
 export default Movie;
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
   const { id } = context.query;
 
   // const request = await fetch(
   //   `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.API_KEY}&language=en-US&append_to_response=videos`
   // ).then((response) => response.json());
-
+  const request= {  
+    "poster_path":"https://firebasestorage.googleapis.com/v0/b/broadcastapp-15206.appspot.com/o/skysports-perisic-mane-ten-hag_5788642.jpeg?alt=media&token=811acc64-bdcc-403b-a242-8365861e088f",
+    "adult":false,
+    "overview":"Thirty years after defeating the Galactic Empire, Han Solo and his allies face a new threat from the evil Kylo Ren and his army of Stormtroopers.",
+    "release_date":"2015-12-18",
+    "genre_ids":[  
+       28,
+       12,
+       878,
+       14
+    ],
+    "id":140607,
+    "original_title":"Star Wars: The Force Awakens",
+    "original_language":"en",
+    "title":"Star Wars: The Force Awakens",
+    "backdrop_path":"https://firebasestorage.googleapis.com/v0/b/broadcastapp-15206.appspot.com/o/skysports-perisic-mane-ten-hag_5788642.jpeg?alt=media&token=811acc64-bdcc-403b-a242-8365861e088f",
+    "popularity":79.28243,
+    "vote_count":1055,
+    "video":false,
+    "genres": [
+      {
+        "id": 18,
+        "name": "Drama"
+      }
+    ],
+    "vote_average":8.05
+ };
   return {
     props: {
-      session,
       result: request,
     },
   };
