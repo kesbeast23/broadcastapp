@@ -1,20 +1,39 @@
 {
-  "name": "broadcastapp",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
-    "next": "12.1.6",
-    "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "@heroicons/react": "^1.0.2",
+    "@next-auth/firebase-adapter": "^0.1.2",
+    "framer-motion": "^4.1.17",
+    "next-auth": "^3.27.3",
+    "react-player": "^2.9.0",
+    "react-responsive-carousel": "^3.2.20",
+    "tailwind-scrollbar-hide": "^1.0.3",
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.4.2",
+    "@mui/material": "^5.4.2",
+    "@mui/styled-engine-sc": "^5.4.2",
+    "@mui/styles": "^5.7.0",
+    "firebase": "^9.6.7",
+    "firebase-admin": "^10.0.2",
+    "moment": "^2.29.1",
+    "next": "latest",
+    "nookies": "^2.5.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-google-recaptcha": "^2.1.0",
+    "react-loading": "^2.0.3",
+    "react-password-strength-bar": "^0.4.0",
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
-    "eslint": "8.16.0",
-    "eslint-config-next": "12.1.6"
+    "autoprefixer": "^10.2.6",
+    "postcss": "^8.3.5",
+    "tailwindcss": "^2.2.4"
   }
 }
