@@ -1,9 +1,10 @@
 import { Button, Grid,TextField,InputAdornment, IconButton ,Alert, Typography, Avatar, Link, Snackbar }  from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '../firebase';
+import { db, auth, provider } from '../firebase';
 import { useRouter } from 'next/router';
-import { useState } from 'react'
+import { addDoc, collection, serverTimestamp,updateDoc,doc} from "firebase/firestore";
+import { useState,useContext, useRef, useEffect } from 'react'
 import { LockOutlined,Visibility,VisibilityOff } from '@mui/icons-material';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -107,10 +108,12 @@ const Register = ({type,color}) => {
         if(strongPassword){
           if (captcha) {
             createUserWithEmailAndPassword(auth,email, passwordOne)
-            .then(authUser => {
-              console.log("Success. The user is created in firebase")
+            .then(async (authUser) => {
+              console.log(authUser)
               router.push("/loggedin");
-              showAlert("success","Successfully registered.Strong Password used!");
+              const collectionRef= collection(db,"users")
+			        const docRef= await addDoc(collectionRef,{email:email,usertype:"viewer",timestamp:serverTimestamp() })
+              showAlert("success",`Successfully registered.Good Password used! ${docRef.id}`);
             })
             .catch(error => {
               setError(error.message)
@@ -127,10 +130,12 @@ const Register = ({type,color}) => {
           //good passworld
           if (captcha) {
             createUserWithEmailAndPassword(auth,email, passwordOne)
-            .then(authUser => {
-              console.log("Success. The user is created in firebase")
+            .then(async (authUser) => {
+              console.log(authUser)
               router.push("/loggedin");
-              showAlert("success","Successfully registered.Good Password used!");
+              const collectionRef= collection(db,"users")
+			        const docRef= await addDoc(collectionRef,{email:email,usertype:"viewer",timestamp:serverTimestamp() })
+              showAlert("success",`Successfully registered.Good Password used! ${docRef.id}`);
             })
             .catch(error => {
               setError(error.message)
