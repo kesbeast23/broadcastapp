@@ -12,11 +12,12 @@ import nookies from 'nookies';
 import { LockOutlined,Visibility,VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import BList from '../components/BList';
+import LList from '../components/LList';
 
 
 
 
-export default function Broadcaster({ broadcastsProps }) {
+export default function Broadcaster({ broadcastsProps,blogsProps }) {
   const [open,setOpen]=useState(false);
   const [alertType,setAlertType]=useState("success");
   const [alertMessage,setAlertMessage]=useState("");
@@ -53,12 +54,7 @@ export default function Broadcaster({ broadcastsProps }) {
    
     <BContext.Provider value={{showAlert,brod,setBrod}}>
     <Container maxWidth="sm">
-      <Box sx={{display:'flex',justifyContent:'space-between'}} mt={3}>
-        <IconButton onClick={()=>auth.signOut()}>
-        <Avatar src={currentUser && currentUser.photoURL}/>
-        </IconButton>
-        <Typography variant="h5">{currentUser && currentUser.email}</Typography>
-      </Box>
+
       <BForm/>
 
       <Snackbar 
@@ -71,6 +67,8 @@ export default function Broadcaster({ broadcastsProps }) {
     </Container>
     <Box mt={3}/>
           <BList  broadcastsProps={broadcastsProps}/>
+	  <Box mt={3}/>
+	  <LList blogsProps={blogsProps}/>
 	  
     </BContext.Provider>
     </Container>
@@ -85,16 +83,24 @@ export async function getServerSideProps(context) {
     const {email} = token;
     if (email !== undefined) {
       const collectionRef = collection(db, "broadcasts");
+      const collectionRef1 = collection(db, "blog");
       const q = query(collectionRef,where("email","==",email), orderBy("timestamp", "desc"));
+      const q1 = query(collectionRef1, orderBy("timestamp", "desc"));
       const querySnapshot = await getDocs(q);
+      const querySnapshot1 = await getDocs(q1);
       let broadcasts =[];
+      let blogs =[];
       querySnapshot.forEach(doc=>{
         broadcasts.push({...doc.data(),id:doc.id,timestamp:doc.data().timestamp.toDate().toString()});
-      }); 
-      console.log(broadcasts)
+      });
+      querySnapshot1.forEach(doc=>{
+        blogs.push({...doc.data(),id:doc.id,timestamp:doc.data().timestamp.toDate().toString()});
+      });  
+      console.log(blogs)
       return {
         props:{
 	broadcastsProps:JSON.stringify(broadcasts) || [],
+	blogsProps:JSON.stringify(blogs) || [],
         }
       };
 
@@ -102,6 +108,7 @@ export async function getServerSideProps(context) {
     return {
       props:{
 	broadcastsProps:{},
+	blogsProps:{},
       }
     };
    

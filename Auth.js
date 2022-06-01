@@ -2,7 +2,8 @@ import { createContext,useEffect, useState,useContext } from "react";
 import Loading from "./components/Loading";
 import nookies from "nookies";
 import { Router, useRouter } from "next/router";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
+import { doc, getDoc } from "firebase/firestore";
 const AuthContext = createContext({});
 
  export const AuthProvider = ({children}) => {
@@ -22,9 +23,12 @@ const AuthContext = createContext({});
 			 const token = await user.getIdToken();
 			 console.log('token',token);
 			 console.log('user',user);
+			 const docRef=doc(db,'users',user.uid);
+			 const docSnap = await getDoc(docRef);
 			 nookies.set(null, "token", token, {});
-			 setCurrentUser(user);
+			 setCurrentUser({...docSnap.data(),uid:user.uid});
 			 setLoading(false);
+			 console.log({...docSnap.data(),uid:user.uid})
 		 })
 	 },[]);
 

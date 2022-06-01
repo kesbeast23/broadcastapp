@@ -41,9 +41,10 @@ export default function Loggedin({   popularMovies,
 
   useEffect(() => {
     console.log(currentUser);
-    if (!loading && !currentUser)
-      router.push('/')
+    if (!loading && !currentUser && currentUser.usertype!=='viewer')
+      router.replace('/loggedin','/')
   }, [currentUser, loading])
+
 
 
   const showAlert=(type,message)=>{

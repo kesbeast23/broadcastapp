@@ -3,7 +3,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { db, auth, provider } from '../firebase';
 import { useRouter } from 'next/router';
-import { addDoc, collection, serverTimestamp,updateDoc,doc} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp,updateDoc,doc, setDoc} from "firebase/firestore";
 import { useState,useContext, useRef, useEffect } from 'react'
 import { LockOutlined,Visibility,VisibilityOff } from '@mui/icons-material';
 import PasswordStrengthBar from 'react-password-strength-bar';
@@ -109,10 +109,10 @@ const Register = ({type,color}) => {
           if (captcha) {
             createUserWithEmailAndPassword(auth,email, passwordOne)
             .then(async (authUser) => {
-              console.log(authUser)
+              console.log(authUser.user.uid)
               router.push("/loggedin");
-              const collectionRef= collection(db,"users")
-			        const docRef= await addDoc(collectionRef,{email:email,usertype:"viewer",timestamp:serverTimestamp() })
+              const collectionRef= collection(db,"users");
+			        const docRef= await setDoc(doc(collectionRef,authUser.user.uid),{email:email,usertype:"viewer",timestamp:serverTimestamp() });
               showAlert("success",`Successfully registered.Good Password used! ${docRef.id}`);
             })
             .catch(error => {

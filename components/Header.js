@@ -31,15 +31,6 @@ function Header() {
             <HomeIcon className="h-4" />
             <span className="span">Home</span>
           </a>
-          <a className="header-link group">
-            <SearchIcon className="h-4" />
-            <span className="span">Search</span>
-          </a>
-          <a className="header-link group">
-            <PlusIcon className="h-4" />
-            <span className="span">Watchlist</span>
-          </a>
-
         </div>
       )}
       {!currentUser ? (
