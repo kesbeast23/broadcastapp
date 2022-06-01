@@ -47,7 +47,7 @@ function Header() {
         </IconButton>
        <div>
        <Typography variant="h6">{currentUser && currentUser.email}</Typography>
-        <Typography variant="h8">{currentUser && currentUser.email}</Typography> 
+        <Typography variant="h8">{currentUser && currentUser.usertype}</Typography> 
        </div>
       </Box>
       )}
