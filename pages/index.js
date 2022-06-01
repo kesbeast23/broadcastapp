@@ -9,7 +9,7 @@ import { useAuth } from "../Auth";
 
 export default function Home({
 
-  
+  broadcastsProps 
 }) {
 
 

@@ -17,6 +17,7 @@
     "firebase": "^9.6.7",
     "firebase-admin": "^10.2.0",
     "framer-motion": "^4.1.17",
+    "material-table-next": "^1.1.10",
     "moment": "^2.29.1",
     "next": "latest",
     "next-auth": "^3.27.3",
