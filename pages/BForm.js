@@ -97,6 +97,7 @@ const BForm = () => {
 			setVUrl(null)
 			setProgresspercent(0)
 			setVProgresspercent(0)
+			window.location.reload();
 			
 		}
 	}

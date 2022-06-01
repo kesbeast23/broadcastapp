@@ -1,6 +1,6 @@
 import { useState,useEffect,useContext } from "react"
 import { db } from '../firebase'
-import { collection, doc, onSnapshot, orderBy, query, QuerySnapshot, where } from "firebase/firestore"
+import { collection, doc,deleteDoc, onSnapshot, orderBy, query, QuerySnapshot, where } from "firebase/firestore"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useAuth } from "../Auth"
 import { useRouter } from "next/router"
@@ -124,8 +124,13 @@ const BList = ({broadcastsProps}) => {
           rows={brods}
           headCells={headCells}
           // loading={false}
-          onDelete={(data) => {
+          onDelete={async(data) => {
             console.log("data", data);
+	   
+		const docRef=doc(db,"broadcasts",data[0]?.id);
+		await deleteDoc(docRef);
+		showAlert('error',`Todo with id  ${data[0]?.id} is deleted successfully`)
+		window.location.reload();
           }}
           onEdit={(data) => {
             console.log(data);
