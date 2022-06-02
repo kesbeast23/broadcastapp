@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import { Chip, InfoRounded } from "@mui/icons-material"
 import MaterialTableNext from "material-table-next";
 import { PlusIcon, XIcon } from "@heroicons/react/solid";
-import { Button,IconButton } from "@mui/material"
+import { Box, Button,IconButton } from "@mui/material"
 import ReactPlayer from "react-player/lazy";
 import { BContext } from "../pages/BContext";
 
@@ -137,21 +137,15 @@ const BList = ({broadcastsProps}) => {
 	    setBrod(data[0]);
           }}
         />
+
 	{showPlayer && (<div
             className={`absolute top-3 inset-x-[7%] md:inset-x-[13%] rounded overflow-hidden transition duration-1000 ${
               showPlayer ? "opacity-100 z-50" : "opacity-0"
             }`}
           >
-            <div className="flex items-center justify-between bg-black text-[#f9f9f9] p-3.5">
-              <span className="font-semibold">Broadcast Trailer</span>
-              <div
-                className="cursor-pointer w-8 h-8 flex justify-center items-center rounded-lg opacity-50 hover:opacity-75 hover:bg-[#0F0F0F]"
-                onClick={() => setShowPlayer(false)}
-              >
-                <XIcon className="h-5" />
-              </div>
-            </div>
+         
             <div className="relative pt-[56.25%]">
+	
               <ReactPlayer
                 url={playerUrl}
                 width="100%"
@@ -160,6 +154,17 @@ const BList = ({broadcastsProps}) => {
                 controls={true}
                 playing={showPlayer}
               />
+	         <div className="flex items-center justify-between bg-black text-[#f9f9f9] p-3.5">
+
+              <span className="font-semibold">Broadcast Trailer</span>
+	
+              <div
+                className="cursor-pointer w-8 h-8 flex justify-center items-center rounded-lg opacity-50 hover:opacity-75 hover:bg-[#0F0F0F]"
+                onClick={() => setShowPlayer(false)}
+              >
+                <XIcon className="h-5" />
+              </div>
+            </div>
             </div>
           </div>)}
     </div>

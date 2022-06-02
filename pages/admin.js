@@ -31,8 +31,6 @@ export default function Admin({ broadcastsProps,blogsProps,ublogsProps }) {
 
   const router = useRouter();
 
-
-
   useEffect(() => {
 	if (currentUser && currentUser?.usertype =='admin')
 	  router.push('/admin');
@@ -67,12 +65,13 @@ export default function Admin({ broadcastsProps,blogsProps,ublogsProps }) {
     loading?<Loading type="bubbles" color="yellowgreen"/>: <Container>
    <Header/>
     <BContext.Provider value={{showAlert,brod,setBrod}}>
-    
+
+    	 <UList ublogsProps={ublogsProps}/>
+	     <Box mt={3}/>
           <BList  broadcastsProps={broadcastsProps}/>
-	  <Box mt={3}/>
+
 	  <LList blogsProps={blogsProps}/>
-	  <UList ublogsProps={ublogsProps}/>
-	  
+	 
     </BContext.Provider>
     </Container>
   )
