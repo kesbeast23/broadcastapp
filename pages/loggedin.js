@@ -82,15 +82,13 @@ export default function Loggedin({   popularMovies,
  <Header/>
         <main className="relative min-h-screen after:bg-center after:bg-cover after:bg-no-repeat after:bg-fixed after:absolute after:inset-0 after:z-[-1]">
           <Slider />
-          <Brands />
-          <MoviesCollection results={popularMovies} title="Popular Movies" />
-          <ShowsCollection results={popularShows} title="Popular Shows" />
+          <MoviesCollection results={popularMovies} title="Cart" />
+          <ShowsCollection results={popularShows} title="Favourites" />
 
           <MoviesCollection
             results={top_ratedMovies}
-            title="Top Rated Movies"
+            title="Broadcasts"
           />
-          <ShowsCollection results={top_ratedShows} title="Top Rated Shows" />
         </main>
   
     </div>
