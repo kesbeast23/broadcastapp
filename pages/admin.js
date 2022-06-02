@@ -15,6 +15,7 @@ import BList from '../components/BList';
 import LList from '../components/LList';
 import Header from '../components/Header';
 import UList from '../components/UList';
+import AList from '../components/AList';
 
 
 
@@ -65,9 +66,10 @@ export default function Admin({ broadcastsProps,blogsProps,ublogsProps }) {
     loading?<Loading type="bubbles" color="yellowgreen"/>: <Container>
    <Header/>
     <BContext.Provider value={{showAlert,brod,setBrod}}>
-
+    <Box mt={3}/>
+    <AList broadcastsProps={broadcastsProps}/>
     	 <UList ublogsProps={ublogsProps}/>
-	     <Box mt={3}/>
+
           <BList  broadcastsProps={broadcastsProps}/>
 
 	  <LList blogsProps={blogsProps}/>
