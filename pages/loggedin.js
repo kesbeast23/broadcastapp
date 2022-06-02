@@ -21,6 +21,7 @@ import ShowsCollection from "../components/ShowsCollection";
 import { useAuth } from "../Auth";
 import { auth, provider } from '../firebase';
 import { Avatar, Box, Icon, IconButton, Typography } from '@mui/material';
+import { WindowSharp } from '@mui/icons-material';
 
 
 
@@ -38,14 +39,22 @@ export default function Loggedin({   popularMovies,
 
   const router = useRouter();
 
-
   useEffect(() => {
-    console.log(currentUser);
-    if (!loading && !currentUser && currentUser.usertype!=='viewer')
-      router.replace('/loggedin','/')
-  }, [currentUser, loading])
+    if (currentUser && currentUser?.usertype =='admin')
+      router.push('/admin');
 
 
+    if (currentUser && currentUser?.usertype =='broadcaster')
+      router.push('/broadcaster');
+
+    if (currentUser && currentUser?.usertype =='viewer')
+      router.push('/loggedin');
+
+      
+    if (!loading && !currentUser && !currentUser?.usertype)
+      router.push('/');
+    }, [currentUser, loading])
+  
 
   const showAlert=(type,message)=>{
     setAlertType(type);
@@ -70,53 +79,7 @@ export default function Loggedin({   popularMovies,
         </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="sticky bg-[#ffffff] top-0 z-[1000] flex items-center px-10 md:px-12 h-[72px]">
-      <Image
-        src="/images/sports2.png"
-        alt=""
-        width={80}
-        height={80}
-        className="cursor-pointer"
-        onClick={() => router.push("/")}
-      />
-      {currentUser && (
-        <div className="hidden ml-10 md:flex items-center space-x-6">
-          <a className="header-link group">
-            <HomeIcon className="h-4" />
-            <span className="span">Home</span>
-          </a>
-          <a className="header-link group">
-            <SearchIcon className="h-4" />
-            <span className="span">Search</span>
-          </a>
-          <a className="header-link group">
-            <PlusIcon className="h-4" />
-            <span className="span">Watchlist</span>
-          </a>
-   
-        </div>
-      )}
-      {!currentUser ? (
-        <button
-          className="ml-auto uppercase border px-4 py-1.5 rounded font-medium tracking-wide hover:bg-blue hover:text-black transition duration-200"
-          onClick={() => router.push("/login")}
-        >
-          Login
-        </button>
-      ) : (
-        <Box   className="ml-auto uppercase border px-2 py-1.5 rounded font-medium tracking-wide hover:bg-blue hover:text-black transition duration-200" sx={{display:'flex',justifyContent:'center'}} mt={1}>
-        <IconButton onClick={()=>auth.signOut()}>
-        <Avatar src={currentUser && currentUser.photoURL}/>
-        </IconButton>
-       <div>
-       <Typography variant="h6">{currentUser && currentUser.email}</Typography>
-        <Typography variant="h8">{currentUser && currentUser.email}</Typography> 
-       </div>
-      </Box>
-      )}
-    </header>
-
-    
+ <Header/>
         <main className="relative min-h-screen after:bg-center after:bg-cover after:bg-no-repeat after:bg-fixed after:absolute after:inset-0 after:z-[-1]">
           <Slider />
           <Brands />

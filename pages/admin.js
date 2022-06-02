@@ -14,12 +14,12 @@ import { useRouter } from 'next/router';
 import BList from '../components/BList';
 import LList from '../components/LList';
 import Header from '../components/Header';
-import { route } from 'next/dist/next-server/server/router';
+import UList from '../components/UList';
 
 
 
 
-export default function Broadcaster({ broadcastsProps,blogsProps }) {
+export default function Admin({ broadcastsProps,blogsProps,ublogsProps }) {
   const [open,setOpen]=useState(false);
   const [alertType,setAlertType]=useState("success");
   const [alertMessage,setAlertMessage]=useState("");
@@ -49,6 +49,7 @@ export default function Broadcaster({ broadcastsProps,blogsProps }) {
 	  router.push('/');
 	}, [currentUser, loading])
       
+
   const showAlert=(type,message)=>{
     setAlertType(type);
     setAlertMessage(message);
@@ -64,25 +65,13 @@ export default function Broadcaster({ broadcastsProps,blogsProps }) {
   
   return (
     loading?<Loading type="bubbles" color="yellowgreen"/>: <Container>
-	    <Header/>
-   
+   <Header/>
     <BContext.Provider value={{showAlert,brod,setBrod}}>
-    <Container maxWidth="sm">
-
-      <BForm/>
-
-      <Snackbar 
-      anchorOrigin={{vertical:'bottom',horizontal:'center'}}
-      open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={alertType} sx={{width:'100%'}}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-    </Container>
-    <Box mt={3}/>
+    
           <BList  broadcastsProps={broadcastsProps}/>
 	  <Box mt={3}/>
 	  <LList blogsProps={blogsProps}/>
+	  <UList ublogsProps={ublogsProps}/>
 	  
     </BContext.Provider>
     </Container>
@@ -95,26 +84,35 @@ export async function getServerSideProps(context) {
     
     const token = await verifyIdToken(cookies.token);
     const {email} = token;
+    console.log("email:"+email);
     if (email !== undefined) {
       const collectionRef = collection(db, "broadcasts");
       const collectionRef1 = collection(db, "blog");
-      const q = query(collectionRef,where("email","==",email), orderBy("timestamp", "desc"));
+      const collectionRef2 = collection(db, "ulog");
+      const q = query(collectionRef, orderBy("timestamp", "desc"));
       const q1 = query(collectionRef1, orderBy("timestamp", "desc"));
+      const q2 = query(collectionRef2,orderBy("timestamp", "desc"));
       const querySnapshot = await getDocs(q);
       const querySnapshot1 = await getDocs(q1);
+      const querySnapshot2 = await getDocs(q2);
       let broadcasts =[];
       let blogs =[];
+      let ublogs =[];
       querySnapshot.forEach(doc=>{
         broadcasts.push({...doc.data(),id:doc.id,timestamp:doc.data().timestamp.toDate().toString()});
       });
       querySnapshot1.forEach(doc=>{
         blogs.push({...doc.data(),id:doc.id,timestamp:doc.data().timestamp.toDate().toString()});
-      });  
+      });
+      querySnapshot2.forEach(doc=>{
+        ublogs.push({...doc.data(),id:doc.id,timestamp:doc.data().timestamp.toDate().toString()});
+      });
       console.log(blogs)
       return {
         props:{
 	broadcastsProps:JSON.stringify(broadcasts) || [],
 	blogsProps:JSON.stringify(blogs) || [],
+	ublogsProps:JSON.stringify(ublogs) || [],
         }
       };
 
@@ -123,6 +121,7 @@ export async function getServerSideProps(context) {
       props:{
 	broadcastsProps:{},
 	blogsProps:{},
+	ublogsProps:{},
       }
     };
    

@@ -110,7 +110,7 @@ const Register = ({type,color}) => {
             createUserWithEmailAndPassword(auth,email, passwordOne)
             .then(async (authUser) => {
               console.log(authUser.user.uid)
-              router.push("/loggedin");
+              router.push("/");
               const collectionRef= collection(db,"users");
 			        const docRef= await setDoc(doc(collectionRef,authUser.user.uid),{email:email,usertype:"viewer",timestamp:serverTimestamp() });
               showAlert("success",`Successfully registered.Good Password used! ${docRef.id}`);

@@ -45,7 +45,7 @@ export default function Login({ todosProps }) {
 		.then(authUser => {
 		console.log(authUser);
 		  console.log("Success. The user is created in firebase")
-		router.push("/loggedin");
+		router.push("/");
             showAlert("success","Successfully logged in");
 		})
 		.catch(error => {
