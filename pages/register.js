@@ -112,7 +112,7 @@ const Register = ({type,color}) => {
               console.log(authUser.user.uid)
               router.push("/");
               const collectionRef= collection(db,"users");
-			        const docRef= await setDoc(doc(collectionRef,authUser.user.uid),{email:email,usertype:"viewer",timestamp:serverTimestamp() });
+			        const docRef= await setDoc(doc(collectionRef,authUser.user.uid),{email:email,id:authUser.user.uid,usertype:"viewer",request:"none",timestamp:serverTimestamp() });
               showAlert("success",`Successfully registered.Good Password used! ${docRef.id}`);
             })
             .catch(error => {
@@ -134,7 +134,7 @@ const Register = ({type,color}) => {
               console.log(authUser)
               router.push("/loggedin");
               const collectionRef= collection(db,"users")
-			        const docRef= await addDoc(collectionRef,{email:email,usertype:"viewer",timestamp:serverTimestamp() })
+			        const docRef= await addDoc(collectionRef,{email:email,usertype:"viewer",request:"none",timestamp:serverTimestamp() })
               showAlert("success",`Successfully registered.Good Password used! ${docRef.id}`);
             })
             .catch(error => {

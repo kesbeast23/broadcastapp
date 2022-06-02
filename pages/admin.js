@@ -20,7 +20,7 @@ import AList from '../components/AList';
 
 
 
-export default function Admin({ broadcastsProps,blogsProps,ublogsProps }) {
+export default function Admin({ broadcastsProps,blogsProps,ublogsProps,usersProps }) {
   const [open,setOpen]=useState(false);
   const [alertType,setAlertType]=useState("success");
   const [alertMessage,setAlertMessage]=useState("");
@@ -67,7 +67,7 @@ export default function Admin({ broadcastsProps,blogsProps,ublogsProps }) {
    <Header/>
     <BContext.Provider value={{showAlert,brod,setBrod}}>
     <Box mt={3}/>
-    <AList broadcastsProps={broadcastsProps}/>
+    <AList usersProps={usersProps}/>
     	 <UList ublogsProps={ublogsProps}/>
 
           <BList  broadcastsProps={broadcastsProps}/>
@@ -90,15 +90,19 @@ export async function getServerSideProps(context) {
       const collectionRef = collection(db, "broadcasts");
       const collectionRef1 = collection(db, "blog");
       const collectionRef2 = collection(db, "ulog");
+      const collectionRef3 = collection(db, "users");
       const q = query(collectionRef, orderBy("timestamp", "desc"));
       const q1 = query(collectionRef1, orderBy("timestamp", "desc"));
       const q2 = query(collectionRef2,orderBy("timestamp", "desc"));
+      const q3 = query(collectionRef3,orderBy("timestamp", "desc"));
       const querySnapshot = await getDocs(q);
       const querySnapshot1 = await getDocs(q1);
       const querySnapshot2 = await getDocs(q2);
+      const querySnapshot3 = await getDocs(q3);
       let broadcasts =[];
       let blogs =[];
       let ublogs =[];
+      let users =[];
       querySnapshot.forEach(doc=>{
         broadcasts.push({...doc.data(),id:doc.id,timestamp:doc.data().timestamp.toDate().toString()});
       });
@@ -108,12 +112,16 @@ export async function getServerSideProps(context) {
       querySnapshot2.forEach(doc=>{
         ublogs.push({...doc.data(),id:doc.id,timestamp:doc.data().timestamp.toDate().toString()});
       });
-      console.log(blogs)
+      querySnapshot3.forEach(doc=>{
+        users.push({...doc.data(),timestamp:doc.data().timestamp.toDate().toString()});
+      });
+      console.log(users)
       return {
         props:{
 	broadcastsProps:JSON.stringify(broadcasts) || [],
 	blogsProps:JSON.stringify(blogs) || [],
 	ublogsProps:JSON.stringify(ublogs) || [],
+  usersProps:JSON.stringify(users) || [],
         }
       };
 
@@ -123,6 +131,7 @@ export async function getServerSideProps(context) {
 	broadcastsProps:{},
 	blogsProps:{},
 	ublogsProps:{},
+  usersProps:{},
       }
     };
    

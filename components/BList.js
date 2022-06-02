@@ -56,8 +56,6 @@ const BList = ({broadcastsProps}) => {
 		label: "code",
       
 	      },
-	 
-	   
 	      {
 		id: "timestamp",
 		numeric: false,
@@ -129,7 +127,7 @@ const BList = ({broadcastsProps}) => {
 	   
 		const docRef=doc(db,"broadcasts",data[0]?.id);
 		await deleteDoc(docRef);
-		showAlert('error',`Todo with id  ${data[0]?.id} is deleted successfully`)
+		showAlert('error',`broadcast with id  ${data[0]?.id} is deleted successfully`)
 		window.location.reload();
           }}
           onEdit={(data) => {
