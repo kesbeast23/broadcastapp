@@ -11,7 +11,10 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import Head from "next/head";
 import Image from "next/image";
 import Header from '../components/Header2';
-
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 const SITE_KEY="6LcRIu4fAAAAAOP3LNy-S5QpnaA9scxTAaraJLIa";
 
 
@@ -248,16 +251,14 @@ const changeuser = async(e) => {
   }}/>
       <PasswordStrengthBar minLength={6} password={passwordOne} />
       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-		<InputLabel id="demo-select-small">Edit</InputLabel>
+		<InputLabel id="demo-select-small">UserType</InputLabel>
 		<Select
 		  labelId="demo-select-small"
 		  id="demo-select-small"
 		  value={"none"}
-		  label="Edit"
+		  label="UserType"
 		  onChange={e=>changeuser(e)}
 		>
-
-		  <MenuItem value={"admin"}>Admin</MenuItem>
 		  <MenuItem value={"broadcaster"}>Broadcaster</MenuItem>
 		  <MenuItem value={"viewer"}>Viewer</MenuItem>
 		 </Select>

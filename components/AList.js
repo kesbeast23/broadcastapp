@@ -136,7 +136,6 @@ const changeuser = async(data,e) => {
 	   
 		const docRef=doc(db,"users",data[0]?.id);
 		await deleteDoc(docRef);
-		showAlert('error',`user with id  ${data[0]?.id} is deleted successfully`)
 		window.location.reload();
           }}
 	  onEdit={(data) => {

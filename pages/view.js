@@ -23,7 +23,7 @@ import MoviesCollection from '../components/MoviesCollection';
 
 
 
-export default function Viewer({ broadcastsProps,blogsProps,ublogsProps,usersProps }) {
+export default function View({ broadcastsProps,blogsProps,ublogsProps,usersProps }) {
   const [open,setOpen]=useState(false);
   const [alertType,setAlertType]=useState("success");
   const [alertMessage,setAlertMessage]=useState("");
@@ -81,7 +81,7 @@ export default function Viewer({ broadcastsProps,blogsProps,ublogsProps,usersPro
             title="cart"
           />
 	   <MoviesCollection
-            broadcastsProps={broadcastsProps}
+            blogsProps={blogsProps}
             title="favourites"
           />
 	   <MoviesCollection
@@ -108,7 +108,7 @@ export async function getServerSideProps(context) {
       const collectionRef2 = collection(db, "ulog");
       const collectionRef3 = collection(db, "users");
       const q = query(collectionRef, orderBy("timestamp", "desc"));
-      const q1 = query(collectionRef1, orderBy("timestamp", "desc"));
+      const q1 = query(collectionRef1,where("code","==","favourite"), orderBy("timestamp", "desc"));
       const q2 = query(collectionRef2,orderBy("timestamp", "desc"));
       const q3 = query(collectionRef3,orderBy("timestamp", "desc"));
       const querySnapshot = await getDocs(q);
