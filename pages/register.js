@@ -18,6 +18,7 @@ const SITE_KEY="6LcRIu4fAAAAAOP3LNy-S5QpnaA9scxTAaraJLIa";
 
 const Register = ({type,color}) => {
 	const [email, setEmail] = useState("");
+  const [usertype, setUsertype] = useState("");
 	const [passwordOne, setPasswordOne] = useState("");
 	const [passwordTwo, setPasswordTwo] = useState("");
   const [open,setOpen]=useState(false);
@@ -31,6 +32,14 @@ const Register = ({type,color}) => {
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
+
+const changeuser = async(e) => {
+	e.stopPropagation();
+  setUsertype(e.target.value);
+};
+  
+ 
 
   const showAlert=(type,message)=>{
     setAlertType(type);
@@ -112,7 +121,7 @@ const Register = ({type,color}) => {
               console.log(authUser.user.uid)
               router.push("/");
               const collectionRef= collection(db,"users");
-			        const docRef= await setDoc(doc(collectionRef,authUser.user.uid),{email:email,id:authUser.user.uid,usertype:"viewer",request:"none",timestamp:serverTimestamp() });
+			        const docRef= await setDoc(doc(collectionRef,authUser.user.uid),{email:email,id:authUser.user.uid,usertype:usertype,request:"none",timestamp:serverTimestamp() });
               showAlert("success",`Successfully registered.Good Password used! ${docRef.id}`);
             })
             .catch(error => {
@@ -134,7 +143,7 @@ const Register = ({type,color}) => {
               console.log(authUser)
               router.push("/loggedin");
               const collectionRef= collection(db,"users")
-			        const docRef= await addDoc(collectionRef,{email:email,usertype:"viewer",request:"none",timestamp:serverTimestamp() })
+			        const docRef= await addDoc(collectionRef,{email:email,usertype:usertype,request:"none",timestamp:serverTimestamp() })
               showAlert("success",`Successfully registered.Good Password used! ${docRef.id}`);
             })
             .catch(error => {
@@ -238,6 +247,21 @@ const Register = ({type,color}) => {
     )
   }}/>
       <PasswordStrengthBar minLength={6} password={passwordOne} />
+      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+		<InputLabel id="demo-select-small">Edit</InputLabel>
+		<Select
+		  labelId="demo-select-small"
+		  id="demo-select-small"
+		  value={"none"}
+		  label="Edit"
+		  onChange={e=>changeuser(e)}
+		>
+
+		  <MenuItem value={"admin"}>Admin</MenuItem>
+		  <MenuItem value={"broadcaster"}>Broadcaster</MenuItem>
+		  <MenuItem value={"viewer"}>Viewer</MenuItem>
+		 </Select>
+	  </FormControl>
 
        <ReCAPTCHA
         sitekey={SITE_KEY}

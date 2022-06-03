@@ -14,6 +14,7 @@ import { Avatar, Box, IconButton, Typography } from "@mui/material";
 function Header() {
   const {currentUser,loading} = useAuth();
   const router = useRouter();
+  
 
   return (
     <header className="sticky bg-[#ffffff] top-0 z-[1000] flex items-center px-10 md:px-12 h-[72px]">
@@ -42,6 +43,7 @@ function Header() {
         </button>
       ) : (
         <Box   className="ml-auto uppercase border px-2 py-1.5 rounded font-medium tracking-wide hover:bg-blue hover:text-black transition duration-200" sx={{display:'flex',justifyContent:'center'}} mt={1}>
+
         <IconButton onClick={()=>auth.signOut()}>
         <Avatar src={currentUser && currentUser.photoURL}/>
         </IconButton>

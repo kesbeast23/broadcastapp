@@ -7,12 +7,31 @@ import Hero from "../../components/Hero";
 import { PlusIcon, XIcon } from "@heroicons/react/solid";
 import ReactPlayer from "react-player/lazy";
 import { useAuth } from "../../Auth";
+import { auth, db } from "./../../firebase";
+import { collection, getDoc,doc,deleteDoc, onSnapshot, orderBy, query, QuerySnapshot, where, updateDoc, serverTimestamp } from "firebase/firestore"
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 function Movie({ result }) {
   const {currentUser,loading} = useAuth();
   const BASE_URL = "https://image.tmdb.org/t/p/original/";
   const router = useRouter();
   const [showPlayer, setShowPlayer] = useState(false);
+  const [brod, setBrod] = useState([])
+
+
+const changeuser = async(brod,e) => {
+	e.stopPropagation();
+	const docRef=  doc(db,"broadcasts",brod?.id);
+	const todoUpdated={...brod,code:e.target.value,timestamp:serverTimestamp()};
+	await updateDoc(docRef,todoUpdated);
+	window.location.reload();
+      };
+    
+ 
+    
 
   useEffect(() => {
     if (!currentUser) {
@@ -23,7 +42,16 @@ function Movie({ result }) {
   // const index = result.videos.results.findIndex(
   //   (element) => element.type === "Trailer"
   // );
+  useEffect(() => {
+    console.log(result);
+      if (typeof result !== 'undefined') {
+          setBrod(JSON.parse(result));
+          console.log(brod);
+        }
+      
+  }, []);
 
+  console.log(brod);
   return (
     <div className="relative">
       <Head>
@@ -36,30 +64,17 @@ function Movie({ result }) {
       ) : (
         <section className="relative z-50">
           <div className="relative min-h-[calc(100vh-72px)]">
-            <Image
-              src={
-                `${result.backdrop_path || result.poster_path}` ||
-                `${result.poster_path}`
-              }
+           {brod && brod.img && (<Image
+              src={brod?.img}
               layout="fill"
               objectFit="cover"
-            />
+            />)}
           </div>
           <div className="absolute inset-y-28 md:inset-y-auto md:bottom-10 inset-x-4 md:inset-x-12 space-y-6 z-50">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-              {result.title || result.original_name}
+              {brod.title}
             </h1>
-            <div className="flex items-center space-x-3 md:space-x-5">
-              <button className="text-xs md:text-base bg-[#f9f9f9] text-black flex items-center justify-center py-2.5 px-6 rounded hover:bg-[#c6c6c6]">
-                <img
-                  src="/images/play-icon-black.svg"
-                  alt=""
-                  className="h-6 md:h-8"
-                />
-                <span className="uppercase font-medium tracking-wide">
-                  Play
-                </span>
-              </button>
+            
 
               <button
                 className="text-xs md:text-base bg-black/30 text-[#f9f9f9] border border-[#f9f9f9] flex items-center justify-center py-2.5 px-6 rounded hover:bg-[#c6c6c6]"
@@ -74,22 +89,32 @@ function Movie({ result }) {
                   Trailer
                 </span>
               </button>
+              <div className="flex items-center space-x-3 md:space-x-5">
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+		<InputLabel id="demo-select-small">Status</InputLabel>
+		<Select
+		  labelId="demo-select-small"
+		  id="demo-select-small"
+		  value={brod.code}
+		  label="Status"
+		  onChange={e=>changeuser(brod,e)}
+		>
 
-              <div className="rounded-full border-2 border-white flex items-center justify-center w-11 h-11 cursor-pointer bg-black/60">
-                <PlusIcon className="h-6" />
-              </div>
+		  <MenuItem value={"favourite"}>Favourite</MenuItem>
+		  <MenuItem value={"cart"}>Cart</MenuItem>
+		  <MenuItem value={"none"}>None</MenuItem>
+		</Select>
+	      </FormControl>
 
-              <div className="rounded-full border-2 border-white flex items-center justify-center w-11 h-11 cursor-pointer bg-black/60">
-                <img src="/images/group-icon.svg" alt="" />
-              </div>
+
             </div>
 
             <p className="text-xs md:text-sm">
-              {result.release_date || result.first_air_date} •{" "}
-              {Math.floor(result.runtime / 60)}h {result.runtime % 60}m •{" "}
-              {result.genres.map((genre) => genre.name + " ")}{" "}
+              {brod.code} •{" "}
+
+              {brod.brodcaster+ " "}{" "}
             </p>
-            <h4 className="text-sm md:text-lg max-w-4xl">{result.overview}</h4>
+            <h4 className="text-sm md:text-lg max-w-4xl">{brod.overview}</h4>
           </div>
 
           {/* Bg Overlay */}
@@ -113,7 +138,7 @@ function Movie({ result }) {
             </div>
             <div className="relative pt-[56.25%]">
               <ReactPlayer
-                url={`https://firebasestorage.googleapis.com/v0/b/broadcastapp-15206.appspot.com/o/file_example_MP4_480_1_5MG.mp4?alt=media&token=7f4a1e74-e1fb-42b7-8913-9a3c495b2d4d`}
+                url={brod.video}
                 width="100%"
                 height="100%"
                 style={{ position: "absolute", top: "0", left: "0" }}
@@ -136,36 +161,14 @@ export async function getServerSideProps(context) {
   // const request = await fetch(
   //   `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.API_KEY}&language=en-US&append_to_response=videos`
   // ).then((response) => response.json());
-  const request= {  
-    "poster_path":"https://firebasestorage.googleapis.com/v0/b/broadcastapp-15206.appspot.com/o/skysports-perisic-mane-ten-hag_5788642.jpeg?alt=media&token=811acc64-bdcc-403b-a242-8365861e088f",
-    "adult":false,
-    "overview":"Thirty years after defeating the Galactic Empire, Han Solo and his allies face a new threat from the evil Kylo Ren and his army of Stormtroopers.",
-    "release_date":"2015-12-18",
-    "genre_ids":[  
-       28,
-       12,
-       878,
-       14
-    ],
-    "id":140607,
-    "original_title":"Star Wars: The Force Awakens",
-    "original_language":"en",
-    "title":"Star Wars: The Force Awakens",
-    "backdrop_path":"https://firebasestorage.googleapis.com/v0/b/broadcastapp-15206.appspot.com/o/skysports-perisic-mane-ten-hag_5788642.jpeg?alt=media&token=811acc64-bdcc-403b-a242-8365861e088f",
-    "popularity":79.28243,
-    "vote_count":1055,
-    "video":false,
-    "genres": [
-      {
-        "id": 18,
-        "name": "Drama"
-      }
-    ],
-    "vote_average":8.05
- };
+  
+
+  const docRef=doc(db,'broadcasts',id);
+  const docSnap = await getDoc(docRef);
+  let request={...docSnap.data(),id:id};
   return {
     props: {
-      result: request,
+      result: JSON.stringify(request) || [],
     },
   };
 }

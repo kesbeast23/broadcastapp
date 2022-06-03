@@ -1,62 +1,56 @@
-
-import { collection, doc,deleteDoc, onSnapshot, orderBy, query, QuerySnapshot, where, updateDoc, serverTimestamp } from "firebase/firestore"
+import { Alert, Avatar, Container, IconButton,  Snackbar, Typography } from '@mui/material'
+import { Box } from '@mui/system';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react'
-import { db,auth } from '../firebase';
+import { useAuth } from '../Auth';
 import Loading from '../components/Loading';
-import Image from "next/image";
-import {
-  HomeIcon,
-  SearchIcon,
-  PlusIcon,
-  StarIcon,
-} from "@heroicons/react/solid";
+import { db,auth } from '../firebase';
+import { verifyIdToken } from '../firebaseAdmin';
+import { BContext } from './BContext';
+import BForm from './BForm';
 import nookies from 'nookies';
+import { LockOutlined,Visibility,VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import Head from "next/head";
-import Brands from "../components/Brands";
-import MoviesCollection from "../components/MoviesCollection";
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import Slider from "../components/Slider";
-import ShowsCollection from "../components/ShowsCollection";
-import { useAuth } from "../Auth";
-import { Avatar, Box, Container, Icon, IconButton, Typography } from '@mui/material';
-import { WindowSharp } from '@mui/icons-material';
-import { BContext } from "./BContext";
+import BList from '../components/BList';
+import LList from '../components/LList';
+import Header from '../components/Header';
+import UList from '../components/UList';
+import AList from '../components/AList';
+import Slider from '../components/Slider';
+import MoviesCollection from '../components/MoviesCollection';
 
 
 
-export default function Loggedin({ broadcastsProps,blogsProps,ublogsProps,usersProps }) {
+
+
+export default function Viewer({ broadcastsProps,blogsProps,ublogsProps,usersProps }) {
   const [open,setOpen]=useState(false);
   const [alertType,setAlertType]=useState("success");
   const [alertMessage,setAlertMessage]=useState("");
   const [brod, setBrod] = useState({title:'',overview:'',img:'',video:'',code:'',brodcaster:''});
-  const [brods, setBrods] = useState([])
   const [showPassword, setShowPassword] = useState(false); 
- 
+
+  
   const {currentUser,loading} = useAuth();
 
   const router = useRouter();
-  const [todos, setTodos] = useState([])
-
 
   useEffect(() => {
-    if (currentUser && currentUser?.usertype =='admin')
-      router.push('/admin');
-
-
-    if (currentUser && currentUser?.usertype =='broadcaster')
-      router.push('/broadcaster');
-
-    if (currentUser && currentUser?.usertype =='viewer')
-      router.push('/loggedin');
-
+	if (currentUser && currentUser?.usertype =='admin')
+	  router.push('/admin');
+    
+    
+	if (currentUser && currentUser?.usertype =='broadcaster')
+	  router.push('/broadcaster');
+    
+	if (currentUser && currentUser?.usertype =='viewer')
+	  router.push('/viewer');
+    
+	  
+	if (!loading && !currentUser && !currentUser?.usertype)
+	  router.push('/');
+	}, [currentUser, loading])
       
-    if (!loading && !currentUser && !currentUser?.usertype)
-      router.push('/');
-    }, [currentUser, loading])
-
-  
 
   const showAlert=(type,message)=>{
     setAlertType(type);
@@ -72,31 +66,34 @@ export default function Loggedin({ broadcastsProps,blogsProps,ublogsProps,usersP
   };
   
   return (
+    loading?<Loading type="bubbles" color="yellowgreen"/>: <div>
+	  
 
-   
-  <div>
-      
- 
- <Header/>
-        <main className="relative min-h-screen after:bg-center after:bg-cover after:bg-no-repeat after:bg-fixed after:absolute after:inset-0 after:z-[-1]">
+   <Header/>
+
+    <BContext.Provider value={{showAlert,brod,setBrod}}>
+    <Box mt={3}/>
+    <main className="relative min-h-screen after:bg-center after:bg-cover after:bg-no-repeat after:bg-fixed after:absolute after:inset-0 after:z-[-1]">
           <Slider />
-          {/* {loading?<Loading type="bubbles" color="yellowgreen"/>:<MoviesCollection broadcastsProps={todos} title="Cart" />}
-          <ShowsCollection results={broadcastsProps} title="Favourites" /> */}
 
-          <MoviesCollection
+	  <MoviesCollection
+            broadcastsProps={broadcastsProps}
+            title="cart"
+          />
+	   <MoviesCollection
+            broadcastsProps={broadcastsProps}
+            title="favourites"
+          />
+	   <MoviesCollection
             broadcastsProps={broadcastsProps}
             title="Broadcasts"
           />
-        </main>
-        
+	  </main>
+    </BContext.Provider>
+ 
     </div>
-
-
-
   )
 }
-
-
 
 export async function getServerSideProps(context) {
   try {
